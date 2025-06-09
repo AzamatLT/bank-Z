@@ -1,5 +1,10 @@
 package z.bank.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/epa")
 public class EpaStubController {
@@ -12,7 +17,7 @@ public class EpaStubController {
         ));
     }
 
-    @GetMapping("/token")
+    @PostMapping("/token")
     public ResponseEntity<?> getToken() {
         String stubToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTYxNDMzOTcwMH0.Zh-cFKuBktWwq-w-Tr1fgLAAlULAQOo866JryPijSIQ";
         return ResponseEntity.ok().body(Map.of(

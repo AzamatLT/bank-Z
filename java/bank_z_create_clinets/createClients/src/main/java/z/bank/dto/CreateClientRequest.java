@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreateClientRequest {
+    private String inn;
     private String lastName;
     private String firstName;
     private String middleName;
-    private String inn;
     private String branchCode;
 }
