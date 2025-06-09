@@ -30,5 +30,8 @@ public class ClientHistory {
     private String branchCode;
 
     @Column(nullable = false)
+    private String inn;
+
+    @Column(nullable = false)
     private LocalDateTime operationDate;
 }

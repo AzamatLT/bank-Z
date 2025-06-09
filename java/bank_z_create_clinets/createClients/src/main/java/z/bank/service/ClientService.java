@@ -57,6 +57,7 @@ public class ClientService {
         history.setFirstName(request.getFirstName());
         history.setMiddleName(request.getMiddleName());
         history.setBranchCode(request.getBranchCode());
+        history.setInn(request.getInn());
         history.setOperationDate(LocalDateTime.now());
         historyRepository.save(history);
 
@@ -76,7 +77,7 @@ public class ClientService {
 
         try {
             restTemplate.exchange(
-                    "http://epa-service/api/epa/validate",
+                    "http://localhost:8081/api/epa/token",
                     HttpMethod.POST,
                     new HttpEntity<>(headers),
                     Map.class
