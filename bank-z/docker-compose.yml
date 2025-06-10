@@ -10,12 +10,12 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: bank_z
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5437:5432"
+      - "5438:5432"
     networks:
-      - default
-
+      - zbank-network
+  
   # PgAdmin Interface
   pgadmin:
     container_name: pgadmin_bank_z
@@ -26,9 +26,9 @@ services:
     ports:
       - "8087:80"
     networks:
-      - default
-
-  # Zookeeper service
+      - zbank-network
+      
+  # Zookeeper
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -36,27 +36,29 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - default
+      - zbank-network
 
-  # Kafka broker
+  # Kafka
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka
     depends_on:
       - zookeeper
-    ports:
-      - "9097:9092"  # Внешний порт для обращения к Kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9097
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    ports:
+      - "9092:9092"
+      - "29092:29092"
     networks:
-      - default
-      
+      - zbank-network
+
+  # Prometheus
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -74,8 +76,9 @@ services:
     extra_hosts:  # Добавляем хост Windows в контейнер
       - "host.docker.internal:host-gateway"
     networks:
-      - default
-
+      - zbank-network
+  
+  #node-exporter    
   node-exporter:
     image: prom/node-exporter
     volumes:
@@ -89,14 +92,15 @@ services:
       - --path.sysfs=/host/sys
       - --collector.filesystem.ignored-mount-points
       - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
- #   ports:
-  #    - 9100:9100
+    ports:
+      - 9107:9100
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
     networks:
-      - default
-
+      - zbank-network
+  
+  # Grafana
   grafana:
     image: grafana/grafana
     user: root
@@ -113,11 +117,30 @@ services:
     environment:
       TZ: "Europe/Moscow"
     networks:
-      - default
-      
+      - zbank-network
+
+  # Application
+#  zbank-app:
+#    build: .
+#    container_name: zbank-app
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+#      - KAFKA_TOPIC_LOGS=bank-logs
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bank_z
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=root
+#    depends_on:
+#      - db
+#      - kafka
+#    networks:
+#      - zbank-network
+
+volumes:
+  postgres_data:
+  grafana_data:
+
 networks:
-  default:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.0.0/16
+  zbank-network:
+    driver: bridge
