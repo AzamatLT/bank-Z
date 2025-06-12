@@ -5,6 +5,7 @@ import z.bank.dto.CardResponseDTO;
 import z.bank.dto.ValidationResponseDTO;
 import z.bank.entity.*;
 import z.bank.repository.*;
+import z.bank.util.AccountNumberGenerator;
 import z.bank.util.CardNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -117,7 +118,12 @@ public class CardService {
         // Генерация данных карты и счета
         String cardNumber = CardNumberGenerator.generate();
         LocalDateTime expirationDate = LocalDateTime.now().plusDays(expiryDays);
-        String accountNumber = "" + System.currentTimeMillis();
+        // Генерация номера счёта (20 цифр)
+        String accountNumber = AccountNumberGenerator.generate(
+                String.valueOf(request.getBranchId()),
+                String.valueOf(request.getCurrencyId()),
+                request.getInn()
+        );
 
         System.out.println("accountNumber________________________________" + accountNumber.toString());
 

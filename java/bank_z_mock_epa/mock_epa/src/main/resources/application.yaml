@@ -41,5 +41,5 @@ kafka:
 # loging
 logging:
   level:
-    org.springframework: DEBUG
-    z.bank: TRACE
+    org.springframework.web: DEBUG
+    z.bank: DEBUG

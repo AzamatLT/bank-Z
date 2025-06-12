@@ -1,11 +1,15 @@
 package z.bank.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import z.bank.config.StubProperties;
 import z.bank.service.KafkaLoggingService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -26,19 +30,22 @@ public class GosStubController {
      * Основной endpoint с динамической задержкой
      */
     @GetMapping
-    public ResponseEntity<String> handleGetRequest() throws InterruptedException {
+    public ResponseEntity<Map<String, String>> validate(@RequestParam String inn) throws InterruptedException {
         long startTime = System.currentTimeMillis();
 
         // Применяем задержку
         Thread.sleep(stubProperties.getResponseDelay());
 
-        String response = "OK";
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "OK");
+        response.put("message", "Validation successful");
+
         long processingTime = System.currentTimeMillis() - startTime;
 
         // Логируем в Kafka
         kafkaLoggingService.logMockRequest(
                 "GET /api/validate_people",
-                response,
+                response.toString(), // Преобразуем Map в String для логирования
                 processingTime,
                 stubProperties.getResponseDelay()
         );
@@ -46,7 +53,9 @@ public class GosStubController {
         log.info("Processed request in {} ms (delay: {} ms)",
                 processingTime, stubProperties.getResponseDelay());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
     }
 
     /**

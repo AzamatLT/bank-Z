@@ -32,10 +32,10 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-    &quot;inn&quot;: &quot;111&quot;,&#xd;
-    &quot;lastName&quot;: &quot;Иванов&quot;,&#xd;
-    &quot;firstName&quot;: &quot;Иван&quot;,&#xd;
-    &quot;middleName&quot;: &quot;Иванович&quot;,&#xd;
+    &quot;inn&quot;: &quot;348358957646&quot;,&#xd;
+  &quot;lastName&quot;: &quot;${__RandomString(10,qwertyuiopasdfghjklzxcvbnm,mylastName)}&quot;,&#xd;
+  &quot;firstName&quot;: &quot;${__RandomString(10,qwertyuiopasdfghjklzxcvbnm,myfirstName)}&quot;,&#xd;
+  &quot;middleName&quot;: &quot;${__RandomString(10,qwertyuiopasdfghjklzxcvbnm,mymiddleName)}&quot;,&#xd;
     &quot;branchId&quot;: ${__Random(1,20,myBranch)},&#xd;
     &quot;currencyId&quot;: ${__Random(1,4,myCurrency)}&#xd;
 }</stringProp>
@@ -76,7 +76,7 @@
   &quot;lastName&quot;: &quot;${__RandomString(10,qwertyuiopasdfghjklzxcvbnm,mylastName)}&quot;,&#xd;
   &quot;firstName&quot;: &quot;${__RandomString(10,qwertyuiopasdfghjklzxcvbnm,myfirstName)}&quot;,&#xd;
   &quot;middleName&quot;: &quot;${__RandomString(10,qwertyuiopasdfghjklzxcvbnm,mymiddleName)}&quot;,&#xd;
-  &quot;inn&quot;: &quot;${__Random(100000000000,999999999999,myTin)}&quot;,&#xd;
+  &quot;inn&quot;: &quot;${generated_inn}&quot;,&#xd;
   &quot;branchCode&quot;: &quot;${__Random(1000,9999,myBranchCode)}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -97,6 +97,69 @@
               </elementProp>
             </collectionProp>
           </HeaderManager>
+          <hashTree/>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import java.util.Random;
+
+// Генерация валидного ИНН физ.лица (12 цифр)
+String generateValidIndividualINN() {
+    Random random = new Random()
+    StringBuilder inn = new StringBuilder()
+    
+    // 1. Генерируем первые 10 цифр случайно
+    (1..10).each { inn.append(random.nextInt(10)) }
+    
+    // 2. Вычисляем первую контрольную цифру (11-я)
+    int checksum1 = calculateINNChecksum(inn.toString(), 11)
+    inn.append(checksum1)
+    
+    // 3. Вычисляем вторую контрольную цифру (12-я)
+    int checksum2 = calculateINNChecksum(inn.toString(), 12)
+    inn.append(checksum2)
+    
+    return inn.toString()
+}
+
+// Правильный расчет контрольных сумм для ИНН
+int calculateINNChecksum(String partialInn, int position) {
+    // Коэффициенты для расчетов
+    def coefficients = [
+        11: [7, 2, 4, 10, 3, 5, 9, 4, 6, 8],
+        12: [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
+    ]
+    
+    int sum = 0
+    coefficients[position].eachWithIndex { coeff, index -&gt;
+        sum += Character.getNumericValue(partialInn.charAt(index)) * coeff
+    }
+    
+    int remainder = sum % 11
+    return (remainder &gt; 9) ? 0 : remainder
+}
+
+// Генерация и сохранение в переменную JMeter
+try {
+    String validINN = generateValidIndividualINN()
+    vars.put(&quot;generated_inn&quot;, validINN)
+    log.info(&quot;Generated valid INN: &quot; + validINN)
+} catch (Exception e) {
+    log.error(&quot;Error generating INN: &quot; + e.getMessage(), e)
+    throw e
+}
+
+//ИНН физического лица (индивидуального предпринимателя) состоит из 12 цифр:
+//1-4-я цифры — код налогового органа, который присвоил ИНН;
+//5-10-я цифры — порядковый номер записи о лице в территориальном разделе Единого государственного реестра налогоплательщиков налогового органа, который присвоил ИНН;
+//11-12-я цифры — контрольное число.
+
+
+
+</stringProp>
+          </JSR223PreProcessor>
           <hashTree/>
         </hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
@@ -137,7 +200,7 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Mock">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Mock" enabled="false">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -313,7 +376,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mock_EPA_Token">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mock_EPA_Token" enabled="false">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
@@ -341,7 +404,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mock_EPA_Validate">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mock_EPA_Validate" enabled="false">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
