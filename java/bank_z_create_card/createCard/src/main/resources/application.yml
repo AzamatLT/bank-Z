@@ -1,9 +1,9 @@
 server:
-  port: 8083
+  port: 78083
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5438/bank_z
+    url: jdbc:postgresql://${POSTGRES_IP}:5432/bank_z
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
@@ -17,14 +17,14 @@ spring:
     show-sql: true
 
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: localhost:79092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 validation:
   service:
-    url: http://localhost:8082/api/validate_people
+    url: http://localhost:78082/api/validate_people
 
 management:
   endpoints:
