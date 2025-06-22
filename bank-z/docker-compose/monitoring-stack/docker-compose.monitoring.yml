@@ -1,0 +1,41 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus_bz
+    volumes:
+      - ./config/configuration/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "49090:9090"
+    networks:
+      - bank_z
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana_bz
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "43000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - bank_z
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb_bz
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+    ports:
+      - "48086:8086"
+    networks:
+      - bank_z
+
+volumes:
+  grafana-data:
+  influxdb-data:
+
+networks:
+  bank_z:
+    external: true

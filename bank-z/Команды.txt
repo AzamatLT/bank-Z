@@ -1,0 +1,19 @@
+
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createcard\docker-compose.services_create_card.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createcard\docker-compose.services_create_card.yml up -d --build
+
+Наличие всех указанных сетей docker network ls
+
+docker network rm bank_z
+docker network create bank_z
+docker network inspect bank_z
+
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\postgres-stack\docker-compose.postgres.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\postgres-stack\docker-compose.postgres.yml up -d --build
+
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\monitoring-stack\docker-compose.monitoring.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\monitoring-stack\docker-compose.monitoring.yml up -d --build
+
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\kafka-stack\docker-compose.kafka.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\kafka-stack\docker-compose.kafka.yml up -d --build
+

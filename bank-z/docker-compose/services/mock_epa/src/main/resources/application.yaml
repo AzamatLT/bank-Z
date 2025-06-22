@@ -1,0 +1,45 @@
+# Server configuration
+server:
+  port: 8081
+
+# Actuator settings
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, heapdump
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+    heapdump:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# delay
+stub:
+  mock:
+    validate-delay: 150  # ????????? ???????? ???????? ??? validate ? ??
+    token-delay: 200     # ????????? ???????? ???????? ??? token ? ??
+
+# Kafka for loging
+spring:
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+kafka:
+  topics:
+    mock_logs: mock_logs
+
+# loging
+logging:
+  level:
+    org.springframework.web: DEBUG
+    z.bank: DEBUG
