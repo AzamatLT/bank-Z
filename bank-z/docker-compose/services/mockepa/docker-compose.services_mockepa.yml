@@ -1,0 +1,19 @@
+services:
+  mockepa:
+    build: ./
+#    image: your-registry/mockepa:latest
+    container_name: mockepa
+    ports:
+      - "${MOCKEPA_PORT}:48081"
+    networks:
+      bank_z:  # Явно подключаем к сети
+        aliases:
+          - mockepa  # Добавляем DNS-алиас
+    environment:
+      JAVA_OPTS: "${MOCKEPA_JAVA_OPTS}"
+    labels:
+      - "type=mock"
+ 
+networks:
+  bank_z:
+    external: true

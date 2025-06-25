@@ -2,6 +2,14 @@
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createcard\docker-compose.services_create_card.yml down
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createcard\docker-compose.services_create_card.yml up -d --build
 
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\mockepa\docker-compose.services_mockepa.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\mockepa\docker-compose.services_mockepa.yml up -d --build
+
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\mockgos\docker-compose.services_mockgos.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\mockgos\docker-compose.services_mockgos.yml up -d --build
+
+
+
 Наличие всех указанных сетей docker network ls
 
 docker network rm bank_z

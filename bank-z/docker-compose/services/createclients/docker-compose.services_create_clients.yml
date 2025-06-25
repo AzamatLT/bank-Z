@@ -1,16 +1,16 @@
 services:
-  createcard:
+  createclients:
     build: ./
-#    image: your-registry/createcard:latest
-    container_name: createcard
+#    image: your-registry/createclients:latest
+    container_name: createclients
     ports:
-      - "${CREATE_CARD_PORT}:48084"
+      - "${CREATE_CLIENTS_PORT}:48085"
     networks:
       bank_z:  # Явно подключаем к сети
         aliases:
-          - createcard  # Добавляем DNS-алиас
+          - createclients  # Добавляем DNS-алиас
     environment:
-      JAVA_OPTS: "${CREATECARD_JAVA_OPTS}"
+      JAVA_OPTS: "${CREATECLIENTS_JAVA_OPTS}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:49092"
       KAFKA_TOPIC_CLIENT: "${KAFKA_TOPIC_CLIENT}"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_bz:5432/${POSTGRES_DB}"

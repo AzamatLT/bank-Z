@@ -1,0 +1,19 @@
+services:
+  mockgos:
+    build: ./
+#    image: your-registry/mockgos:latest
+    container_name: mockgos
+    ports:
+      - "${MOCKGOS_PORT}:48082"
+    networks:
+      bank_z:  # Явно подключаем к сети
+        aliases:
+          - mockgos  # Добавляем DNS-алиас
+    environment:
+      JAVA_OPTS: "${MOCKGOS_JAVA_OPTS}"
+    labels:
+      - "type=mock"
+ 
+networks:
+  bank_z:
+    external: true
