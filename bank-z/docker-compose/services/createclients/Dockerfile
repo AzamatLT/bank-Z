@@ -21,7 +21,7 @@ COPY --from=builder /app/target/*.jar app.jar
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 \
                -Dmanagement.endpoints.web.exposure.include=health,metrics,prometheus \
                -Dmanagement.metrics.export.prometheus.enabled=true"
-EXPOSE 8080
+EXPOSE 48085
 
 RUN useradd -m appuser && chown appuser:appuser /app
 USER appuser

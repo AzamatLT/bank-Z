@@ -2,6 +2,9 @@
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createcard\docker-compose.services_create_card.yml down
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createcard\docker-compose.services_create_card.yml up -d --build
 
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createclients\docker-compose.services_create_clients.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\createclients\docker-compose.services_create_clients.yml up -d --build
+
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\mockepa\docker-compose.services_mockepa.yml down
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\services\mockepa\docker-compose.services_mockepa.yml up -d --build
 
@@ -25,3 +28,15 @@ docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\monitoring-stack\docker-co
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\kafka-stack\docker-compose.kafka.yml down
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\kafka-stack\docker-compose.kafka.yml up -d --build
 
+clients - 48085
+card - 48084
+mockepa - 48081
+mockgos - 48082
+kafka - 48092-9092
+zoo - 42181
+postgresql - 45432
+postgrs-exporter - 49187-9187
+pgadmin - 48087-80
+grafana - 43000-3000
+influx - 48086-8086
+prometheus - 49090-9090
