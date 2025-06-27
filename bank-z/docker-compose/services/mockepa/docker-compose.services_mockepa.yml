@@ -1,19 +1,28 @@
 services:
   mockepa:
-    build: ./
-#    image: your-registry/mockepa:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
     container_name: mockepa
+    hostname: mockepa
     ports:
-      - "${MOCKEPA_PORT}:48081"
-    networks:
-      bank_z:  # Явно подключаем к сети
-        aliases:
-          - mockepa  # Добавляем DNS-алиас
+      - "${MOCKEPA_PORT:-48081}:48081"
     environment:
-      JAVA_OPTS: "${MOCKEPA_JAVA_OPTS}"
+      JAVA_OPTS: "${MOCKEPA_JAVA_OPTS:- -Xmx512m}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    networks:
+      bank_z:
+        aliases:
+          - mockepa
     labels:
       - "type=mock"
- 
+      - "monitoring=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:48081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 networks:
   bank_z:
     external: true

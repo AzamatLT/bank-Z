@@ -11,7 +11,7 @@ services:
           - createcard  # Добавляем DNS-алиас
     environment:
       JAVA_OPTS: "${CREATECARD_JAVA_OPTS}"
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:49092"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
       KAFKA_TOPIC_CLIENT: "${KAFKA_TOPIC_CLIENT}"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_bz:5432/${POSTGRES_DB}"
       SPRING_DATASOURCE_USERNAME: "${POSTGRES_USER}"

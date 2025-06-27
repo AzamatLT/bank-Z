@@ -1,6 +1,8 @@
+# Server configuration
 server:
   port: 48085
 
+# Actuator settings
 management:
   endpoints:
     web:
@@ -19,10 +21,20 @@ management:
         enabled: true
 
 spring:
+# Kafka
   kafka:
-    bootstrap-servers: localhost:49092
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    properties:
+      security.protocol: PLAINTEXT
+      request.timeout.ms: 30000
+      retries: 5
+
+# Postgres
   datasource:
-    url: jdbc:postgresql://localhost:45432/bank_z
+    url: jdbc:postgresql://localhost:5432/bank_z
     username: root
     password: root
     hikari:
@@ -39,6 +51,7 @@ spring:
           provider_disables_autocommit: true
         flush_mode: ALWAYS
 
+#Logs
 kafka:
   topic:
     logs: logs
@@ -60,6 +73,7 @@ logging:
     z:
       bank: DEBUG
 
+#Swagger
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

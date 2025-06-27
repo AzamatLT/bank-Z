@@ -77,7 +77,7 @@ public class ClientService {
 
         try {
             restTemplate.exchange(
-                    "http://localhost:8081/api/epa/token",
+                    "http://mockepa:48081/api/epa/token",
                     HttpMethod.POST,
                     new HttpEntity<>(headers),
                     Map.class

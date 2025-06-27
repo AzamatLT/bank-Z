@@ -10,7 +10,7 @@ scrape_configs:
   # Для node-exporter в network_mode: host
   - job_name: 'postgresql-node-exporter'
     static_configs:
-      - targets: ['host.docker.internal:9100']  # Специальное имя для Docker Desktop
+      - targets: ['host.docker.internal:9100']
         labels:
           instance: 'postgres-node'
 
@@ -21,32 +21,39 @@ scrape_configs:
         labels:
           instance: 'postgres-db'
 
-  # Для InfluxDB (если нужно)
+  # Для InfluxDB 
   - job_name: 'influxdb'
     static_configs:
       - targets: ['influxdb:8086']
       
   # Для мониторинга Генератора нагрузки
   - job_name: windows_exporter
-    scrape_interval: 5s
     static_configs:
-    - targets: ['host.docker.internal:9182']
-
-  # JVM Сервиса создания карты
-  - job_name: create_card
-    scrape_interval: 5s
-    metrics_path: /metrics
-    static_configs:
-    - targets: ['host.docker.internal:9000']
+      - targets: ['host.docker.internal:9182']
     
   # Kafka
   - job_name: 'kafka-exporter'
     static_configs:
-    - targets: ['kafka-exporter:9308']
+      - targets: ['kafka-exporter:9308']
     
   - job_name: 'kafka-node-exporter'
     static_configs:
       - targets: ['kafka-node-exporter:9102']
+      
+  - job_name: 'kafka-brokers'
+    static_configs:
+      - targets: ['kafka:9092']
+    metrics_path: /metrics
+    
+  - job_name: 'jvm-services'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['createcard:48084', 'createclients:48085']
+  
+  - job_name: 'jvm-mock'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['mockepa:48081', 'mockgos:48082']
 
 alerting:
   alertmanagers:

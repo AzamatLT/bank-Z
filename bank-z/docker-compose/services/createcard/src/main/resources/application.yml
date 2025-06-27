@@ -1,6 +1,8 @@
+# Server configuration
 server:
   port: 48084
 
+#Postgres
 spring:
   datasource:
     url: jdbc:postgresql://localhost:45432/bank_z
@@ -16,16 +18,23 @@ spring:
         format_sql: true
     show-sql: true
 
+# Kafka
   kafka:
-    bootstrap-servers: localhost:48092
+    bootstrap-servers: kafka:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    properties:
+      security.protocol: PLAINTEXT
+      request.timeout.ms: 30000
+      retries: 5
 
+#Mock
 validation:
   service:
-    url: http://localhost:48082/api/validate_people
+    url: http://mockgos:48082/api/validate_people
 
+# Actuator settings
 management:
   endpoints:
     web:
@@ -41,6 +50,7 @@ management:
       prometheus:
         enabled: true
 
+#Logs
 logging:
   level:
     org.springframework.web: DEBUG
