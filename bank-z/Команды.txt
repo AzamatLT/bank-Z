@@ -28,15 +28,49 @@ docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\monitoring-stack\docker-co
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\kafka-stack\docker-compose.kafka.yml down
 docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\kafka-stack\docker-compose.kafka.yml up -d --build
 
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\jenkins\docker-compose.jenkins.yml down
+docker-compose -f D:\_Docker\PR_Bank-z\docker-compose\jenkins\docker-compose.jenkins.yml up -d --build
+
+
 clients - 48085
 card - 48084
 mockepa - 48081
 mockgos - 48082
+
 kafka - 48092-9092
 zoo - 42181
+kafka_ui - 48480-8080
+kafka_jmx - 49997-9997
+JMX для Prometheus - 47071:7071
+
 postgresql - 45432
 postgrs-exporter - 49187-9187
 pgadmin - 48087-80
+
 grafana - 43000-3000
+renderer  -  58081-8081
+cadvisor - 48080 - 8080
 influx - 48086-8086
 prometheus - 49090-9090
+
+jenkins - 58080-8080 50000-50000
+
+
+
+docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=48080:8080 --detach=true --name=cadvisor gcr.io/cadvisor/cadvisor:v0.47.0
+
+
+
+
+bd01e36b8290f1f09cc77897aadd55089d7773410a6fdb06212921e39d0a7bb5
+Дамп памяти (если приложение упало):
+
+bash
+docker run --rm -it --privileged --pid=container:bd01e36b8290f1f09cc77897aadd55089d7773410a6fdb06212921e39d0a7bb5 ubuntu bash -c "apt update && apt install -y gdb && gdb -p 1"
+
+
+рендеринг
+curl -X GET -H "Authorization: Bearer KEY" "http://localhost:43000/render/d-solo/9AJV_mnIk/cadvisor-dashboard?orgId=1&panelId=2&from=now-1h&to=now&width=1000&height=500" -o test.png
+
+
+

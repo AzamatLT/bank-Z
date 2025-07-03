@@ -12,6 +12,13 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana_bz
+    environment:
+      GF_RENDERING_SERVER_URL: "http://renderer:8081/render"
+      GF_RENDERING_CALLBACK_URL: "http://grafana:3000/"
+      GF_LOG_FILTERS: "rendering:debug"
+      GF_SECURITY_ALLOW_EMBEDDING: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
     volumes:
       - grafana-data:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
@@ -19,22 +26,46 @@ services:
       - "43000:3000"
     depends_on:
       - prometheus
+      - renderer
+    networks:
+      - bank_z
+      
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    container_name: renderer_bz
+    environment:
+      ENABLE_METRICS: "true"
+      LOG_LEVEL: "debug"
+      ENABLE_REMOTE_RENDERING: "true"
+      REMOTE_RENDERING_URL: "http://chrome-headless:9222"
+      RENDERING_TIMEOUT: "60"
+    ports:
+      - "58081:8081"
     networks:
       - bank_z
 
   influxdb:
-    image: influxdb:latest
+    image: influxdb:2.7
     container_name: influxdb_bz
-    volumes:
-      - influxdb-data:/var/lib/influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin_password
+      - DOCKER_INFLUXDB_INIT_ORG=myorg
+      - DOCKER_INFLUXDB_INIT_BUCKET=jmeter
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken123
+      - DOCKER_INFLUXDB_INIT_USE_BASIC_AUTH=true
+      - DOCKER_INFLUXDB_INIT_RETENTION=1w
     ports:
       - "48086:8086"
+    volumes:
+      - influxdb2-data:/var/lib/influxdb2
     networks:
       - bank_z
 
 volumes:
   grafana-data:
-  influxdb-data:
+  influxdb2-data:
 
 networks:
   bank_z:

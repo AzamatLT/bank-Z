@@ -1,0 +1,8 @@
+lowercaseOutputName: true
+rules:
+- pattern: kafka.<type=(.+), name=(.+)PerSec><>Count
+  name: kafka_$1_$2_total
+- pattern: kafka.server<type=(.+), name=(.+)PerSec, topic=(.+)><>Count
+  name: kafka_topic_$1_$2_total
+  labels:
+    topic: "$3"
