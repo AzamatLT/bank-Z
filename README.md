@@ -131,6 +131,8 @@
    - сформирован отчёт о проведённых тестах;
    - в wiki github подготовлены инструкции по разворачиванию и работе системы.
 
+## 
+
 ## Для визуальной организации задач и рабочего процесса используется Projects в github - https://github.com/users/AzamatLT/projects/1
 
 ## Документация ведётся тут - https://github.com/AzamatLT/bank-Z/wiki/Welcome
