@@ -1,0 +1,90 @@
+---
+- name: Install performance tools
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Python 3
+      apt:
+        name: python3
+        state: present
+
+    - name: Install OpenJDK 11
+      apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Install JMeter
+      block:
+        - name: Download JMeter
+          get_url:
+            url: https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz
+            dest: /tmp/apache-jmeter-5.6.2.tgz
+            mode: '0755'
+        
+        - name: Extract JMeter
+          unarchive:
+            src: /tmp/apache-jmeter-5.6.2.tgz
+            dest: /opt
+            remote_src: yes
+        
+        - name: Create symlink
+          file:
+            src: /opt/apache-jmeter-5.6.2/bin/jmeter
+            dest: /usr/local/bin/jmeter
+            state: link
+
+    - name: Install k6
+      block:
+        - name: Add k6 repository key
+          apt_key:
+            url: https://dl.k6.io/key.gpg
+            state: present
+        
+        - name: Add k6 repository
+          apt_repository:
+            repo: "deb https://dl.k6.io/deb stable main"
+            state: present
+            filename: k6
+        
+        - name: Install k6 package
+          apt:
+            name: k6
+            state: latest
+            update_cache: yes
+
+    - name: Install Gatling
+      block:
+        - name: Ensure unzip is installed
+          apt:
+            name: unzip
+            state: present
+            update_cache: yes
+
+        - name: Download Gatling
+          get_url:
+            url: https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/3.9.5/gatling-charts-highcharts-bundle-3.9.5-bundle.zip
+            dest: /tmp/gatling.zip
+            mode: '0755'
+
+        - name: Create Gatling directory
+          file:
+            path: /opt/gatling-charts-highcharts-bundle-3.9.5
+            state: directory
+            mode: '0755'
+
+        - name: Extract Gatling (manual unzip)
+          command: 
+            cmd: unzip -q /tmp/gatling.zip -d /opt
+            creates: /opt/gatling-charts-highcharts-bundle-3.9.5/bin/gatling.sh
+
+        - name: Create symlink
+          file:
+            src: /opt/gatling-charts-highcharts-bundle-3.9.5
+            dest: /opt/gatling
+            state: link

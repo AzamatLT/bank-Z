@@ -1,0 +1,12 @@
+services:
+  linux_z:
+    build: .
+    container_name: linux_z
+    volumes:
+      - ./workspace:/workspace
+    tty: true
+    stdin_open: true
+    
+networks:
+  bank_z:
+    external: true

@@ -1,0 +1,11 @@
+services:
+  vault-ui:
+    build: .
+    container_name: vault-ui
+    ports:
+      - "49093:80"
+    restart: unless-stopped
+    
+networks:
+  bank_z:
+    external: true

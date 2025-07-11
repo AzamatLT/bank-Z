@@ -1,0 +1,10 @@
+groups:
+- name: nginx-alerts
+  rules:
+  - alert: NginxDown
+    expr: up{job="nginx-balancer-auth-service"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Nginx is down ({{ $labels.instance }})"

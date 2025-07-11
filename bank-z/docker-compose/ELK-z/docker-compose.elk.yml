@@ -1,0 +1,53 @@
+services:
+  elasticsearch:
+    image: elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "49200:9200"
+    networks:
+      - elk_network
+      - bank_z
+
+  logstash:
+    image: logstash:8.12.0
+    container_name: logstash
+    volumes:
+      - ./config/pipeline.conf:/usr/share/logstash/pipeline/pipeline.conf
+    environment:
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk_network
+      - bank_z
+
+  kibana:
+    image: kibana:8.12.0
+    container_name: kibana
+    ports:
+      - "45601:5601"
+    volumes:
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk_network
+      - bank_z
+
+volumes:
+  es_data:
+    driver: local
+    
+networks:
+  bank_z:
+    external: true
+  elk_network:
+    driver: bridge

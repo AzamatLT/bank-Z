@@ -1,0 +1,21 @@
+services:
+
+  # Сервис FastAPI (бекенд)
+  backend:
+    build: .
+    ports:
+      - "48091:48091"
+
+  # Сервис Streamlit (фронтенд)
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "48092:48092"
+    depends_on:
+      - backend
+  
+networks:
+  bank_z:
+    external: true

@@ -1,0 +1,20 @@
+services:
+  generator:
+    build: .
+    container_name: generator
+    networks:
+      - bank_z
+    volumes:
+      # Основная рабочая папка
+      - ./ansible_data:/ansible/shared_data
+      # Папки для каждого инструмента
+      - ./jmeter_scripts:/ansible/jmeter_scripts
+      - ./k6_scripts:/ansible/k6_scripts
+      - ./gatling_scripts:/ansible/gatling_scripts
+      - ./data:/ansible/data
+    cap_add:
+      - NET_ADMIN  # Для сетевых тестов
+  
+networks:
+  bank_z:
+    external: true

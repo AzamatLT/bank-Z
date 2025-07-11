@@ -1,0 +1,70 @@
+server:
+  port: 48090
+
+spring:
+  # Kafka
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: card-operation-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    properties:
+      security.protocol: PLAINTEXT
+      request.timeout.ms: 30000
+      metadata.max.age.ms: 300000
+      retries: 5
+
+  # Postgres
+  datasource:
+    url: jdbc:postgresql://localhost:45432/bank_z
+    username: root
+    password: root
+    hikari:
+      auto-commit: false
+      max-lifetime: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        connection:
+          provider_disables_autocommit: true
+        flush_mode: ALWAYS
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-1.0.xml
+
+#Logs
+kafka:
+  topic:
+    logs: logs
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        web: DEBUG
+        orm:
+          jpa: DEBUG
+        transaction: TRACE
+    z:
+      bank: DEBUG
+
+app:
+  topics:
+    operations: operations
+    notifications: notifications
+    logs: logs

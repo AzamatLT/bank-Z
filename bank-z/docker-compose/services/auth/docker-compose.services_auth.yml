@@ -1,0 +1,93 @@
+services:
+  auth-service-1:
+    build: ./
+    container_name: auth-service-1
+    ports:
+      - "${LOGIN_PORT_1}:8088"
+      - "9010:9010"  # JMX-порт
+      - "9011:9011"  # RMI Registry порт
+    environment:
+      SERVER_SERVLET_CONTEXT_PATH: /auth
+      JAVA_OPTS: >-
+        -Dcom.sun.management.jmxremote
+        -Dcom.sun.management.jmxremote.port=9010
+        -Dcom.sun.management.jmxremote.rmi.port=9011
+        -Dcom.sun.management.jmxremote.local.only=false
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Djava.rmi.server.hostname=127.0.0.1
+        ${LOGIN_JAVA_OPTS}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+      KAFKA_TOPIC_LOGIN: "${KAFKA_TOPIC_LOGIN}"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_bz:5432/${POSTGRES_DB}"
+      SPRING_DATASOURCE_USERNAME: "${POSTGRES_USER}"
+      SPRING_DATASOURCE_PASSWORD: "${POSTGRES_PASSWORD}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/auth/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    labels:
+      - "type=business"
+    networks:
+      bank_z:
+        aliases:
+          - login
+
+  auth-service-2:
+    build: ./
+    container_name: auth-service-2
+    ports:
+      - "${LOGIN_PORT_2}:8088"
+    environment:
+      SERVER_SERVLET_CONTEXT_PATH: /auth
+      JAVA_OPTS: "${LOGIN_JAVA_OPTS}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+      KAFKA_TOPIC_LOGIN: "${KAFKA_TOPIC_LOGIN}"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_bz:5432/${POSTGRES_DB}"
+      SPRING_DATASOURCE_USERNAME: "${POSTGRES_USER}"
+      SPRING_DATASOURCE_PASSWORD: "${POSTGRES_PASSWORD}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/auth/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    labels:
+      - "type=business"
+    networks:
+      bank_z:
+        aliases:
+          - login
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-balancer-auth-service
+    ports:
+      - "48088:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - auth-service-1
+      - auth-service-2
+    networks:
+      bank_z:
+        aliases:
+          - nginx
+      
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:0.11
+    container_name: nginx-exporter
+    ports:
+      - "59113:9113"
+    command:
+      - '-nginx.scrape-uri=http://nginx:8080/nginx_status'
+    depends_on:
+      - nginx
+    networks:
+      bank_z:
+        aliases:
+          - nginx-exporter
+
+networks:
+  bank_z:
+    external: true

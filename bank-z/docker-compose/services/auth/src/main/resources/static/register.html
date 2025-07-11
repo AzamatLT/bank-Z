@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank - Registration</title>
+    <link rel="stylesheet" href="/auth/static/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Bank Registration</h1>
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="regUsername">Username:</label>
+            <input type="text" id="regUsername" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="/auth/static/index.html">Login here</a></p>
+    <div id="error" class="error-message"></div>
+</div>
+<script src="/auth/static/js/register.js"></script>
+</body>
+</html>

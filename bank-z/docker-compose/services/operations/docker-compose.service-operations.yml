@@ -1,0 +1,20 @@
+services:
+  card-operation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - bank_z
+    environment:
+      JAVA_OPTS: "${OPERATION_JAVA_OPTS}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+      KAFKA_TOPIC_OPERATION: "${KAFKA_TOPIC_OPERATION}"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_bz:5432/${POSTGRES_DB}"
+      SPRING_DATASOURCE_USERNAME: "${POSTGRES_USER}"
+      SPRING_DATASOURCE_PASSWORD: "${POSTGRES_PASSWORD}"
+    deploy:
+      replicas: 2
+
+networks:
+  bank_z:
+    external: true

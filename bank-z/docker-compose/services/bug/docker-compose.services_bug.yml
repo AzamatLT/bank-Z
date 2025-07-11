@@ -1,0 +1,19 @@
+services:
+  bug:
+    build: ./
+#    image: your-registry/bug:latest
+    container_name: bug
+    ports:
+      - "${bug_PORT}:48089"
+    networks:
+      bank_z:  
+        aliases:
+          - bug  
+    environment:
+      JAVA_OPTS: "${BUG_JAVA_OPTS}"
+    labels:
+      - "type=MemoryLeakDemoApplication"
+ 
+networks:
+  bank_z:
+    external: true
