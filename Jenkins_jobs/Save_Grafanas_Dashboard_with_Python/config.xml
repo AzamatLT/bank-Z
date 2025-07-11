@@ -1,0 +1,190 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@1540.v295eccc9778f">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2255.v56a_15e805f12"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2255.v56a_15e805f12">
+      <jobProperties/>
+      <triggers/>
+      <parameters>
+        <string>DASHBOARD_UID</string>
+        <string>TIME_TO</string>
+        <string>TIME_FROM</string>
+      </parameters>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>DASHBOARD_UID</name>
+          <description>Select dashboard to render</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>another-uid:another-dashboard</string>
+              <string>9AJV_mnIk:cadvisor-dashboard</string>
+              <string>IV0hu1m7z1:windows-exporter-dashboard1</string>
+              <string>arbyzi_pochemy_vas_tak_mnogo2:jvm-v2</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>TIME_FROM</name>
+          <description>Start time</description>
+          <defaultValue>now-1h</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>TIME_TO</name>
+          <description>End time</description>
+          <defaultValue>now</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <com.cloudbees.plugins.credentials.CredentialsParameterDefinition plugin="credentials@1415.v831096eb_5534">
+          <name>grafana-api-key</name>
+          <defaultValue>grafana-api-key</defaultValue>
+          <credentialType>org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl</credentialType>
+          <required>false</required>
+        </com.cloudbees.plugins.credentials.CredentialsParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4150.ve20ca_b_a_a_2815">
+    <script>pipeline {
+    agent any
+
+    environment {
+        GRAFANA_URL = &quot;http://grafana:3000&quot;
+        GRAFANA_API_KEY = credentials(&apos;grafana-api-key&apos;) // Используем Jenkins Credentials
+    }
+
+    parameters {
+        choice(
+            name: &apos;DASHBOARD_UID&apos;,
+            choices: [
+                &apos;another-uid:another-dashboard&apos;,
+                &apos;9AJV_mnIk:cadvisor-dashboard&apos;,
+                &apos;IV0hu1m7z1:windows-exporter-dashboard1&apos;,
+                &apos;arbyzi_pochemy_vas_tak_mnogo2:jvm-v2&apos;
+            ],
+            description: &apos;Select dashboard to render&apos;
+        )
+        string(
+            name: &apos;TIME_FROM&apos;,
+            defaultValue: &apos;now-1h&apos;,
+            description: &apos;Start time&apos;
+        )
+        string(
+            name: &apos;TIME_TO&apos;,
+            defaultValue: &apos;now&apos;,
+            description: &apos;End time&apos;
+        )
+    }
+
+    stages {
+        stage(&apos;Prepare Environment&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+                    mkdir -p dashboard_screenshots
+                    python3 -m venv ./venv --without-pip || true
+                    if [ -d &quot;./venv&quot; ]; then
+                        curl -s https://bootstrap.pypa.io/get-pip.py | ./venv/bin/python
+                        ./venv/bin/pip install requests python-dotenv
+                    else
+                        pip3 install requests python-dotenv || true
+                    fi
+                &apos;&apos;&apos;
+            }
+        }
+
+        stage(&apos;Get Dashboard Panels&apos;) {
+            steps {
+                script {
+                    def (uid, title) = params.DASHBOARD_UID.split(&apos;:&apos;)
+                    
+                    // Сохраняем Python скрипт во временный файл
+                    writeFile file: &apos;get_panels.py&apos;, text: &quot;&quot;&quot;
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+base_url = os.getenv(&apos;GRAFANA_URL&apos;, &apos;${GRAFANA_URL}&apos;)
+api_key = os.getenv(&apos;GRAFANA_API_KEY&apos;, &apos;${GRAFANA_API_KEY}&apos;)
+dashboard_uid = &apos;${uid}&apos;
+
+headers = {&apos;Authorization&apos;: f&apos;Bearer {api_key}&apos;}
+response = requests.get(
+    f&apos;{base_url}/api/dashboards/uid/{dashboard_uid}&apos;,
+    headers=headers
+)
+dashboard = response.json().get(&apos;dashboard&apos;, {})
+panels = [str(p[&apos;id&apos;]) for p in dashboard.get(&apos;panels&apos;, []) if &apos;id&apos; in p]
+with open(&apos;panels.txt&apos;, &apos;w&apos;) as f:
+    f.write(&apos;,&apos;.join(panels))
+                    &quot;&quot;&quot;
+                    
+                    sh &apos;&apos;&apos;
+                        . ./venv/bin/activate 2&gt;/dev/null || true
+                        python3 get_panels.py
+                        echo &quot;Found panels: $(cat panels.txt)&quot;
+                    &apos;&apos;&apos;
+                }
+            }
+        }
+
+        stage(&apos;Render Panels&apos;) {
+            steps {
+                script {
+                    def panels = readFile(&apos;panels.txt&apos;).split(&apos;,&apos;)
+                    
+                    for (panelId in panels) {
+                        sh &quot;&quot;&quot;
+                            . ./venv/bin/activate 2&gt;/dev/null || true
+                            python3 /scripts/render_panel.py \
+                            --dashboard-uid ${params.DASHBOARD_UID.split(&apos;:&apos;)[0]} \
+                            --panel-id ${panelId} \
+                            --from &quot;${params.TIME_FROM}&quot; \
+                            --to &quot;${params.TIME_TO}&quot; \
+                            --output ./dashboard_screenshots
+                        &quot;&quot;&quot;
+                    }
+                }
+            }
+        }
+
+        stage(&apos;Create Archive&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+                    zip -r dashboards.zip dashboard_screenshots/
+                    echo &quot;Generated screenshots:&quot;
+                    ls -lh dashboard_screenshots/
+                    echo &quot;Archive content:&quot;
+                    unzip -l dashboards.zip
+                &apos;&apos;&apos;
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: &apos;dashboards.zip&apos;, fingerprint: true
+            sh &apos;rm -rf dashboard_screenshots venv panels.txt get_panels.py&apos;
+        }
+        success {
+            echo &quot;SUCCESS: All dashboard panels rendered successfully&quot;
+            echo &quot;Download screenshots: ${BUILD_URL}artifact/dashboards.zip&quot;
+        }
+        failure {
+            echo &quot;ERROR: Failed to render dashboard panels&quot;
+            echo &quot;Check logs for details&quot;
+        }
+    }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

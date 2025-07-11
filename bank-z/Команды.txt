@@ -69,7 +69,7 @@ bash
 docker run --rm -it --privileged --pid=container:bd01e36b8290f1f09cc77897aadd55089d7773410a6fdb06212921e39d0a7bb5 ubuntu bash -c "apt update && apt install -y gdb && gdb -p 1"
 
 
-рендеринг
+рендеринг без python
 curl -X GET -H "Authorization: Bearer KEY" "http://localhost:43000/render/d-solo/9AJV_mnIk/cadvisor-dashboard?orgId=1&panelId=2&from=now-1h&to=now&width=1000&height=500" -o test.png
 
 
