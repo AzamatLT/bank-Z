@@ -33,7 +33,7 @@
   - вся система включая заглушки и генераторы нагрузки разворачивается в docker.
 
 ## В проекте используются:
-- docker
+- docker и portainer
 - микросервисы на java 17, spring, python
 - postgresql
 - kafka
