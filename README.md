@@ -143,4 +143,4 @@
 ![Админ панель](./images/AdminPanel.png)
 ![Реконсиляция](./images/Reconsilation.png)
 ![Отчёты](./images/Reports.png)
-![Прочие](./images/Others.png)
+
