@@ -1,0 +1,22 @@
+[
+    {
+        "actionName": "Action",
+        "steps": [
+            {
+                "stepId": "STEP1",
+                "stepName": "Custom Request: CREATE_CARD",
+                "infFile": "t1.inf",
+                "time": 1752774429775
+            }
+        ],
+        "transactions": [
+            {
+                "transactionName": "CREATE_CARD",
+                "rawStartTime": 1752774429005,
+                "rawEndTime": 1752774429858,
+                "thinkTime": 0.0,
+                "wastedTime": 0.09546184539794922
+            }
+        ]
+    }
+]

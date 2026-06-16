@@ -1,0 +1,22 @@
+[
+    {
+        "actionName": "Action",
+        "steps": [
+            {
+                "stepId": "STEP1",
+                "stepName": "Custom Request: CREATE_CLIENTS",
+                "infFile": "t1.inf",
+                "time": 1752773971725
+            }
+        ],
+        "transactions": [
+            {
+                "transactionName": "CREATE_CLIENTS",
+                "rawStartTime": 1752773971333,
+                "rawEndTime": 1752773971796,
+                "thinkTime": 0.0,
+                "wastedTime": 0.07369375228881836
+            }
+        ]
+    }
+]

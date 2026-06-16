@@ -1,0 +1,9 @@
+{
+	"card_number": "{cardNumber}",
+    "amount": {amount},
+    "operation_type": "DECREASE",
+    "atm_number": "ATM-1",
+    "office_number": "{officeNumber}",
+    "currency_code": 1,
+    "operation_id": 1
+    }

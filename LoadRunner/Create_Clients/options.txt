@@ -1,0 +1,9 @@
+-+
+-DCCI
+-D_IDA_XL
+-DWINNT
+-ID:\__GitHub\bank-Z\LoadRunner\Create_Clients
+-IC:\Program Files (x86)\Micro Focus\LoadRunner\include
+-ed:\__github\bank-z\loadrunner\create_clients\\logfile.log
+d:\__github\bank-z\loadrunner\create_clients\\combined_Create_Clients.c
+d:\__github\bank-z\loadrunner\create_clients\\pre_cci.c

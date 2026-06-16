@@ -1,0 +1,13 @@
+[t1]
+SnapshotXmlFile=snapshot_1.xml
+ContentType=application/json
+StepName=Custom Request: CREATE_CARD
+Total=1
+FileName1=t1.json
+RequestHeaderFile=t1_RequestHeader.txt
+ResponseHeaderFile=t1_ResponseHeader.txt
+RawStepEndTime=1752774429720
+RawStepName=CREATE_CARD
+RequestBodyFile=t1_RequestBody.txt
+RawStepStartTime=1752774429099
+URL1=http://localhost:48084/api/cards

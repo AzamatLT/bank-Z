@@ -1,0 +1,5 @@
+Error:  CreateProcess failed: Не удается найти указанный файл.
+Error: Invalid host or port number. Probably Java wasn't spawned.
+Warning: Extension java_int.dll reports error -1 on call to function ExtPerThreadInitialize
+Error: Vuser failed to initialize extension java_int.dll.
+Vuser Terminated.

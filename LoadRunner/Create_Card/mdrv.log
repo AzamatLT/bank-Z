@@ -1,0 +1,110 @@
+Virtual User Script started at: 17.07.2025 20:47:08
+Starting action vuser_init.
+Web Turbo Replay of LoadRunner 2021.0.0 for Windows 10; build 430 (ˇÌ‚ 05 2021 19:27:22)  	[MsgId: MMSG-26983]
+Run mode: HTML  	[MsgId: MMSG-26993]
+Replay user agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)  	[MsgId: MMSG-26988]
+Runtime Settings file: "D:\__GitHub\bank-Z\LoadRunner\Create_Card\\default.cfg"  	[MsgId: MMSG-27141]
+Vuser directory: "D:\__GitHub\bank-Z\LoadRunner\Create_Card"  	[MsgId: MMSG-27052]
+Vuser output directory: "D:\__GitHub\bank-Z\LoadRunner\Create_Card"  	[MsgId: MMSG-27050]
+Operating system's current working directory: "d:\__github\bank-z\loadrunner\create_card"  	[MsgId: MMSG-27048]
+UTC (GMT) start date/time   : 2025-07-17 17:47:08  	[MsgId: MMSG-26992]
+LOCAL start date/time       : 2025-07-17 20:47:08  	[MsgId: MMSG-26991]
+Local daylight-Savings-Time : No  	[MsgId: MMSG-26990]
+Some of the Runtime Settings:  	[MsgId: MMSG-27142]
+    Download non-HTML resources: Yes  	[MsgId: MMSG-27018]
+    Verification checks: No  	[MsgId: MMSG-27017]
+    Convert from/to UTF-8: No  	[MsgId: MMSG-27016]
+    Simulate a new user each iteration: Yes  	[MsgId: MMSG-27009]
+    Non-critical item errors as warnings: Yes  	[MsgId: MMSG-27008]
+    HTTP errors as warnings: No  	[MsgId: MMSG-27007]
+    WinInet replay instead of Sockets: No  	[MsgId: MMSG-27006]
+    HTTP version: 1.1  	[MsgId: MMSG-27005]
+    Keep-Alive HTTP connections: Yes  	[MsgId: MMSG-27004]
+    Max self Meta refresh updates: 2  	[MsgId: MMSG-27003]
+    Obtaining the proxy settings from the default browser: No proxy is used (direct connection to the Internet)  	[MsgId: MMSG-26845]
+    DNS caching: Yes  	[MsgId: MMSG-27035]
+    Simulate browser cache: Yes  	[MsgId: MMSG-27034]
+        Cache URLs requiring content (e.g., HTMLs): Yes  	[MsgId: MMSG-27033]
+            Additional URLs requiring content: text/xml;text/plain  	[MsgId: MMSG-27032]
+        Check for newer versions every visit to the page: No  	[MsgId: MMSG-27031]
+    Page download timeout (sec): 120  	[MsgId: MMSG-27030]
+    Resource Page Timeout is a Warning: No  	[MsgId: MMSG-27029]
+    ContentCheck enabled: Yes  	[MsgId: MMSG-27028]
+    ContentCheck script-level file: "D:\__GitHub\bank-Z\LoadRunner\Create_Card\LrwiAedScript.xml"  	[MsgId: MMSG-27027]
+    Enable Web Page Breakdown: No  	[MsgId: MMSG-27026]
+    Enable connection data points: Yes  	[MsgId: MMSG-27023]
+    Process socket after reschedule: Yes  	[MsgId: MMSG-27022]
+    Snapshot on error: No  	[MsgId: MMSG-27021]
+    Define each step as a transaction: No  	[MsgId: MMSG-27020]
+    Read beyond Content-Length: No  	[MsgId: MMSG-26994]
+    Parse HTML Content-Type: TEXT  	[MsgId: MMSG-26999]
+    Graph hits per second and HTTP status codes: Yes  	[MsgId: MMSG-26998]
+    Graph response bytes per second: Yes  	[MsgId: MMSG-26997]
+    Graph pages per second: No  	[MsgId: MMSG-26996]
+    Web recorder version ID: 8  	[MsgId: MMSG-26995]
+Ending action vuser_init.
+Running Vuser...
+Starting iteration 1.
+Maximum number of concurrent connections per server: 6  	[MsgId: MMSG-26989]
+Starting action Action.
+Action.c(6): Notify: Transaction "CREATE_CARD" started.
+Action.c(9): web_reg_save_param_ex started  	[MsgId: MMSG-26355]
+Action.c(9): Registering web_reg_save_param_ex was successful  	[MsgId: MMSG-26390]
+Action.c(16): web_add_header("Content-Type") started  	[MsgId: MMSG-26355]
+Action.c(16): Warning -26594: The header being added may cause unpredictable results if applied to ALL the URLs generated on behalf of the next script function. It will apply to the primary URL only.  	[MsgId: MWAR-26594]
+Action.c(16): "Content-Type: application/json; charset=utf-8" header registered for adding to requests from the immediately following Action function  	[MsgId: MMSG-26506]
+Action.c(16): web_add_header("Content-Type") highest severity level was "warning"  	[MsgId: MMSG-26391]
+Action.c(18): web_custom_request("CREATE_CARD") started  	[MsgId: MMSG-26355]
+Action.c(18): Notify: Parameter Substitution: parameter "EXINN" =  "048896995201"
+Action.c(18): t=341ms: Connecting [0] to host 127.0.0.1:48084  	[MsgId: MMSG-26000]
+Action.c(18): t=341ms: Connected socket [0] from 127.0.0.1:48512 to 127.0.0.1:48084 in 0 ms  	[MsgId: MMSG-26000]
+Action.c(18): t=341ms: 291-byte request headers for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     POST /api/cards HTTP/1.1\r\n
+Action.c(18):     Content-Type: application/json; charset=utf-8\r\n
+Action.c(18):     Cache-Control: no-cache\r\n
+Action.c(18):     User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)\r\n
+Action.c(18):     Accept-Encoding: gzip, deflate\r\n
+Action.c(18):     Accept: */*\r\n
+Action.c(18):     Connection: Keep-Alive\r\n
+Action.c(18):     Host: localhost:48084\r\n
+Action.c(18):     Content-Length: 141\r\n
+Action.c(18):     \r\n
+Action.c(18): t=344ms: 141-byte request body for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     {"lastName": "mylastName", "firstName": "myfirstName", "middleName": "mymiddleName", "inn"
+Action.c(18):     : "048896995201", "branchId": 123, "currencyId": 2}
+Action.c(18): t=863ms: 162-byte response headers for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     HTTP/1.1 200 \r\n
+Action.c(18):     Content-Type: application/json\r\n
+Action.c(18):     Transfer-Encoding: chunked\r\n
+Action.c(18):     Date: Thu, 17 Jul 2025 17:47:09 GMT\r\n
+Action.c(18):     Keep-Alive: timeout=60\r\n
+Action.c(18):     Connection: keep-alive\r\n
+Action.c(18):     \r\n
+Action.c(18): t=871ms: 4-byte chunked response overhead for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     c1\r\n
+Action.c(18): t=871ms: 2-byte chunked response overhead for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     \r\n
+Action.c(18): t=872ms: 193-byte chunked response body for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     {"status":"SUCCESS","message":"\xD0\x9A\xD0\xB0\xD1\x80\xD1\x82\xD0\xB0 \xD1\x83\xD1\x81\xD0
+Action.c(18):     \xBF\xD0\xB5\xD1\x88\xD0\xBD\xD0\xBE \xD1\x81\xD0\xBE\xD0\xB7\xD0\xB4\xD0\xB0\xD0\xBD\xD0\xB0
+Action.c(18):     ","cardNumber":"4276349196694189","expirationDate":"2028-04-12T17:47:09.287147350","accoun
+Action.c(18):     tNumber":"40817002012304889346"}
+Action.c(18): Notify: Saving Parameter "response_data = "status":"SUCCESS","message":"–ö–∞—Ä—Ç–∞ —É—Å–ø–µ—\x88–Ω–æ —Å–æ–∑–¥–∞–Ω–∞","cardNumber":"4276349196694189","expirationDate":"2028-04-12T17:47:09.287147350","accountNumber":"40817002012304889346"".
+Action.c(18): t=873ms: 5-byte chunked response overhead for "http://localhost:48084/api/cards" (RelFrameId=1, Internal ID=1)
+Action.c(18):     0\r\n
+Action.c(18):     \r\n
+Action.c(18): t=877ms: Request done "http://localhost:48084/api/cards"  	[MsgId: MMSG-26000]
+Action.c(18): web_custom_request("CREATE_CARD") was successful, 193 body bytes, 162 header bytes, 11 chunking overhead bytes  	[MsgId: MMSG-26385]
+Action.c(34): Notify: Parameter Substitution: parameter "response_data" =  ""status":"SUCCESS","message":"–ö–∞—Ä—Ç–∞ —É—Å–ø–µ—\x88–Ω–æ —Å–æ–∑–¥–∞–Ω–∞","cardNumber":"4276349196694189","expirationDate":"2028-04-12T17:47:09.287147350","accountNumber":"40817002012304889346""
+Action.c(36): ŒÚ‚ÂÚ ÒÂ‚Â‡: "status":"SUCCESS","message":"–ö–∞—Ä—Ç–∞ —É—Å–ø–µ—à–Ω–æ —Å–æ–∑–¥–∞–Ω–∞","cardNumber":"4276349196694189","expirationDate":"2028-04-12T17:47:09.287147350","accountNumber":"40817002012304889346"
+Action.c(42): V ”—œ≈’:  ‡Ú‡ ÒÓÁ‰‡Ì‡
+Action.c(50): Notify: Transaction "CREATE_CARD" ended with a "Pass" status (Duration: 0,8534 Wasted Time: 0,0955).
+Ending action Action.
+Ending iteration 1.
+Ending Vuser...
+Starting action vuser_end.
+Ending action vuser_end.
+Vuser Terminated.
+t=1105ms: Closed connection [0] to localhost:48084 after completing 1 request(s)  	[MsgId: MMSG-26000]
+HTML-Mode memory management statistics: Reusable=0, NonReusable=0, CsMemBlockSize=4096, checks disabled  	[MsgId: MMSG-26000]
+Vuser 0 (thread 9224), ended OK."

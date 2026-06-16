@@ -1,0 +1,2 @@
+"{"lastName": "mylastName", "firstName": "myfirstName", "middleName": "mymiddleName", "inn": "1"
+"21212121212", "branchCode": "123"}"
