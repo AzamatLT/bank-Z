@@ -1,0 +1,1 @@
+[95m -f ./services/docker-compose.services_create_card.yml up -d[0m
